@@ -1,0 +1,53 @@
+﻿@model System.Collections.Generic.Dictionary<string, string>
+
+<h1 class="text-center pb-4 pt-2">Panel użytkownika</h1>
+
+<div class="container">
+
+    <table class="table "  style="margin-left: auto; margin-right: auto; max-width: 500px">
+        <tr>
+            <td >Email</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("emailaddress")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Imię</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("name")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Nazwisko</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("surname")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Miasto</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("locality")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Adres</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("streetaddress")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Numer telefonu</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("mobilephone")).FirstOrDefault().Value</td>
+        </tr>
+        <tr>
+            <td>Uprawnienia</td>
+            <td class="text-center">@Model.Where(x => x.Key.EndsWith("role")).FirstOrDefault().Value</td>
+        </tr>
+
+    </table>
+
+</div>
+
+
+
+
+
+@*Name	Value
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier	3
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress	user2@test.pl
+    http://schemas.microsoft.com/ws/2008/06/identity/claims/role	User
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/locality
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress
+    http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone*@	
