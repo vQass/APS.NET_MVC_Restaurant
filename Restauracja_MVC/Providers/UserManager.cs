@@ -62,11 +62,11 @@ namespace Restauracja_MVC.Providers
         private List<Claim> GetUserClaims(ApplicationUser user)
         {
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID));
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
             claims.Add(new Claim(ClaimTypes.Role, user.Role));
-            claims.Add(new Claim(ClaimTypes.Name, user.Name));
-            claims.Add(new Claim(ClaimTypes.Surname, user.Surname));
+            claims.Add(new Claim(ClaimTypes.Name, user.Name == null ? "" : user.Name));
+            claims.Add(new Claim(ClaimTypes.Surname, user.Surname == null ? "" : user.Surname));
             claims.Add(new Claim(ClaimTypes.Locality, user.City == null ? "" : user.City));
             claims.Add(new Claim(ClaimTypes.StreetAddress, user.Address == null ? "" : user.Address));
             claims.Add(new Claim(ClaimTypes.MobilePhone, user.Phone == null ? "" : user.Phone));
