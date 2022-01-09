@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models;
 using Restauracja_MVC.Models.AccountViewModel;
 using Restauracja_MVC.Providers;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -197,20 +201,68 @@ namespace Restauracja_MVC.Controllers
         public IActionResult Edit()
         {
 
-            var user = new UserEditViewModel();
+            var EditVM = new UserEditCitiesViewModel();
 
-            user.Name = User.Claims.Where(x => x.Type.EndsWith("name")).FirstOrDefault().Value;
-            user.Surname = User.Claims.Where(x => x.Type.EndsWith("surname")).FirstOrDefault().Value;
-            user.City = User.Claims.Where(x => x.Type.EndsWith("locality")).FirstOrDefault().Value;
-            user.Address = User.Claims.Where(x => x.Type.EndsWith("streetaddress")).FirstOrDefault().Value;
-            user.Phone = User.Claims.Where(x => x.Type.EndsWith("mobilephone")).FirstOrDefault().Value;
+            EditVM.User = new UserEditViewModel();
 
-            return View(user);
+            EditVM.User.Name = User.Claims.Where(x => x.Type.EndsWith("name")).FirstOrDefault().Value;
+            EditVM.User.Surname = User.Claims.Where(x => x.Type.EndsWith("surname")).FirstOrDefault().Value;
+            EditVM.User.City = User.Claims.Where(x => x.Type.EndsWith("locality")).FirstOrDefault().Value;
+            EditVM.User.Address = User.Claims.Where(x => x.Type.EndsWith("streetaddress")).FirstOrDefault().Value;
+            EditVM.User.Phone = User.Claims.Where(x => x.Type.EndsWith("mobilephone")).FirstOrDefault().Value;
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+
+                var command = PrepareCityListCommand(connection);
+
+
+                try
+                {
+                    command.Connection.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+                    EditVM.Cities = GetCitySelectListItem(dr);
+
+                    // In Claims we store name on city, in select we need id of that city
+                    if(EditVM.User.City != null && EditVM.User.City != "") 
+                    {
+                        EditVM.User.City = EditVM.Cities.Where(x => x.Text == EditVM.User.City).First().Value;
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewBag.Error = e.Message;
+                }
+            }
+                
+                return View(EditVM);
         }
+
+        private SqlCommand PrepareCityListCommand(SqlConnection connection)
+        {
+            string qs = $"Select ID, Name FROM Cities";
+
+            SqlCommand command = new SqlCommand(qs, connection);
+
+            return command;
+        }
+
+        private List<SelectListItem> GetCitySelectListItem(SqlDataReader dr)
+        {
+            var cities = new List<SelectListItem>();
+            cities.Add(new SelectListItem { Value = "", Text = "Brak" });
+
+            while (dr.Read())
+            {
+                cities.Add(new SelectListItem { Value = dr["ID"].ToString(), Text = dr["Name"].ToString() });
+            }
+            return cities;
+        }
+
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(UserEditViewModel user)
+        public async Task<IActionResult> Edit(UserEditCitiesViewModel EditVM)
         {
             if (ModelState.IsValid)
             {
@@ -218,7 +270,7 @@ namespace Restauracja_MVC.Controllers
                 {
                     string id = User.Claims.Where(x => x.Type.EndsWith("nameidentifier")).FirstOrDefault().Value;
 
-                    var command = PrepareEditCommand(connection, id, user);
+                    var command = PrepareEditCommand(connection, id, EditVM.User);
 
                     try
                     {
@@ -242,7 +294,7 @@ namespace Restauracja_MVC.Controllers
                     }
                 }
             }
-            return View(user);
+            return View(EditVM);
         }
 
         private SqlCommand PrepareEditCommand(SqlConnection connection, string id, UserEditViewModel user)
