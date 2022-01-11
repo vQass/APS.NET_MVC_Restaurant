@@ -259,8 +259,6 @@ namespace Restauracja_MVC.Controllers
             return cities;
         }
 
-
-        //[Authorize(null, null, "User")] // no nie tak
         [Authorize] 
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditCitiesViewModel EditVM)
