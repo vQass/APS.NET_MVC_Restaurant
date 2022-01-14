@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Restauracja_MVC.Models.Ingredients.IngredientListItem>
+
+@{
+    ViewData["Title"] = "Składniki";
+}
+
+<h1>Panel administratora - składniki</h1>
+
+<p>
+    <a asp-action="Create">Dodaj składnik</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.ID  }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.ID })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminPanelController : Controller
     {
         public IActionResult Index()

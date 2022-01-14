@@ -7,14 +7,14 @@ namespace Restauracja_MVC.Models
 {
     public class ApplicationUser
     {
-        public string ID { get; set; }
+        public string ID { get; set; } // change to int64 later
         public string Email { get; set; }
         public string Role { get; set; }
-        public string? Name { get; set; }
-        public string? Surname { get; set; }
-        public string? Phone { get; set; }
-        public string? City { get; set; }
-        public string? Address { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Phone { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
 
         public ApplicationUser()
         {

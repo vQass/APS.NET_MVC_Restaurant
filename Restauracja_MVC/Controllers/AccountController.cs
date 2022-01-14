@@ -64,6 +64,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         // Probably should move it somewhere, no idea where yet
+        [NonAction]
         private SqlCommand PrepareRegisterCommand(SqlConnection connection, UserRegisterViewModel obj)
         {
             string qs = "INSERT INTO [dbo].[Users]([Email],[Password],[IsActive],[Role])" +
@@ -127,6 +128,7 @@ namespace Restauracja_MVC.Controllers
             }
             return View();
         }
+        [NonAction]
 
         private SqlCommand PreparePasswordCompareCommand(SqlConnection connection, UserLoginViewModel obj)
         {
@@ -139,6 +141,7 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
+        [NonAction]
 
         private SqlCommand PrepareLoginCommand(SqlConnection connection, string email)
         {
@@ -159,6 +162,7 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
+        [NonAction]
 
         public async Task<bool> SignInAsync(SqlDataReader dr, string email)
         {
@@ -182,6 +186,7 @@ namespace Restauracja_MVC.Controllers
             return false;
         }
 
+        [NonAction]
 
         public async Task<IActionResult> LogoutAsync()
         {
@@ -237,6 +242,7 @@ namespace Restauracja_MVC.Controllers
                 
                 return View(EditVM);
         }
+        [NonAction]
 
         private SqlCommand PrepareCityListCommand(SqlConnection connection)
         {
@@ -246,6 +252,7 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
+        [NonAction]
 
         private List<SelectListItem> GetCitySelectListItem(SqlDataReader dr)
         {
@@ -295,6 +302,7 @@ namespace Restauracja_MVC.Controllers
             }
             return View(EditVM);
         }
+        [NonAction]
 
         private SqlCommand PrepareEditCommand(SqlConnection connection, string id, UserEditViewModel user)
         {
