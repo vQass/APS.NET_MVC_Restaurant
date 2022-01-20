@@ -1,11 +1,10 @@
-﻿@model Restauracja_MVC.Models.Meals.MealListItem
+﻿@model Restauracja_MVC.Models.Meals.MealDetails
 
 @{
     ViewData["Title"] = "Szczegóły dania";
 }
 
 <h1>Szczegóły dania</h1>
-
 <div>
     <hr />
     <dl class="row">
@@ -42,6 +41,6 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.ID}) |
+    @Html.ActionLink("Edytuj", "Edit", new { id=Model.ID}) |
     <a asp-action="Index">Powrót do listy</a>
 </div>
