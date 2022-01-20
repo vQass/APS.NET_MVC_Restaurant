@@ -51,14 +51,13 @@ namespace Restauracja_MVC.Controllers
                     {
                         command.Connection.Open();
                         command.ExecuteNonQuery();
+                        return RedirectToAction("Index", "Home");
                     }
                     catch (Exception e)
                     {
                         ViewBag.Error = e.Message;
-                        return View();
                     }
                 }
-                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -91,7 +90,6 @@ namespace Restauracja_MVC.Controllers
 
                 using (var connection = new SqlConnection(connectionString))
                 {
-                    /*using(would it work if 2nd command had other name???)*/
                     var command = PreparePasswordCompareCommand(connection, obj);
                     try
                     {
@@ -102,21 +100,16 @@ namespace Restauracja_MVC.Controllers
                             // Password compare
                             if (dr["Password"].ToString() == Hasher.GenerateHash(obj.Password))
                             {
-                                try
-                                {
-                                    command = PrepareLoginCommand(connection, obj.Email);
 
-                                    dr.Close();
-                                    dr = command.ExecuteReader();
+                                command = PrepareLoginCommand(connection, obj.Email);
 
-                                    if (await SignInAsync(dr, obj.Email))
-                                        return RedirectToAction("Index", "Home");
+                                dr.Close();
+                                dr = command.ExecuteReader();
 
-                                }
-                                catch (Exception e)
-                                {
-                                    ViewBag.Exception = e.Message;
-                                }
+                                if (await SignInAsync(dr, obj.Email))
+                                    return RedirectToAction("Index", "Home");
+
+
                             }
                         }
                     }
@@ -226,10 +219,10 @@ namespace Restauracja_MVC.Controllers
                 {
                     command.Connection.Open();
                     SqlDataReader dr = command.ExecuteReader();
-                    EditVM.Cities = GetCitySelectListItem(dr);
+                    EditVM.Cities = GetCitySelectList(dr);
 
                     // In Claims we store name on city, in select we need id of that city
-                    if(EditVM.User.City != null && EditVM.User.City != "") 
+                    if (EditVM.User.City != null && EditVM.User.City != "")
                     {
                         EditVM.User.City = EditVM.Cities.Where(x => x.Text == EditVM.User.City).First().Value;
                     }
@@ -239,8 +232,8 @@ namespace Restauracja_MVC.Controllers
                     ViewBag.Error = e.Message;
                 }
             }
-                
-                return View(EditVM);
+
+            return View(EditVM);
         }
         [NonAction]
 
@@ -252,9 +245,9 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
-        [NonAction]
 
-        private List<SelectListItem> GetCitySelectListItem(SqlDataReader dr)
+        [NonAction]
+        private List<SelectListItem> GetCitySelectList(SqlDataReader dr)
         {
             var cities = new List<SelectListItem>();
             cities.Add(new SelectListItem { Value = "", Text = "Brak" });
@@ -266,7 +259,7 @@ namespace Restauracja_MVC.Controllers
             return cities;
         }
 
-        [Authorize] 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditCitiesViewModel EditVM)
         {
@@ -286,7 +279,7 @@ namespace Restauracja_MVC.Controllers
                         string email = User.Claims.Where(x => x.Type.EndsWith("emailaddress")).FirstOrDefault().Value;
 
                         await _userManager.SignOut(this.HttpContext);
-                        
+
                         command = PrepareLoginCommand(connection, email);
 
                         SqlDataReader dr = command.ExecuteReader();
@@ -302,8 +295,8 @@ namespace Restauracja_MVC.Controllers
             }
             return View(EditVM);
         }
-        [NonAction]
 
+        [NonAction]
         private SqlCommand PrepareEditCommand(SqlConnection connection, string id, UserEditViewModel user)
         {
             string qs = $"UPDATE UsersDetails SET Name = @Name, Surname = @Surname, Phone = @Phone, CityID = @CityID, Address = @Address WHERE ID = {id}";
@@ -332,8 +325,5 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
-
     }
-
-
 }

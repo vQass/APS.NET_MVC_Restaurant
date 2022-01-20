@@ -7,6 +7,6 @@ namespace Restauracja_MVC.Models.Meals
 {
     public class MealListItem : Meal
     {
-        public int ID { get; set; } // sprawdzic typ w bazie 
+        public Int16 ID { get; set; } 
     }
 }

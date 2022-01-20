@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,16 @@ namespace Restauracja_MVC.Controllers
 {
     public class OrdersController : Controller
     {
+
+        private readonly IConfiguration _config;
+        private readonly string connectionString;
+
+        public OrdersController(IConfiguration config)
+        {
+            _config = config;
+            connectionString = _config.GetConnectionString("DbConnection");
+        }
+
         // GET: OrdersController
         public ActionResult Index()
         {

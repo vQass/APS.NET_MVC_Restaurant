@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Recipes;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,19 @@ namespace Restauracja_MVC.Controllers
 {
     public class RecipesController : Controller
     {
-            List<RecipesListItem> list = new List<RecipesListItem>();
+        private readonly IConfiguration _config;
+        private readonly string connectionString;
+
+        public RecipesController(IConfiguration config)
+        {
+            _config = config;
+            connectionString = _config.GetConnectionString("DbConnection");
+        }
+
         // GET: RecipesController
         public ActionResult Index()
         {
+            List<RecipesListItem> list = new List<RecipesListItem>();
             list.Add(new RecipesListItem {
                 MealID = 2,
                 IngredientIDlist = new List<int>() {

@@ -5,7 +5,6 @@
 }
 
 <h1>Edycja profilu</h1>
-<h1>@ViewBag.Error</h1>
 
 <hr />
 <div class="row justify-content-center">
@@ -22,7 +21,6 @@
                 <input asp-for="User.Surname" class="form-control" />
                 <span asp-validation-for="User.Surname" class="text-danger"></span>
             </div>
-            @* Change it to select input with values as 1,2... and >NameOfCity< *@
             <div class="form-group">
                 <label asp-for="User.City" class="control-label"></label>
                 <select asp-for="User.City" asp-items="Model.Cities" class="form-control"></select>

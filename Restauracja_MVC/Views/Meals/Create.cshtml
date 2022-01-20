@@ -5,7 +5,6 @@
 }
 
 <h1>Nowe danie</h1>
-
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -23,13 +22,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea rows="3" asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PictureName" class="control-label"></label>
-                <input asp-for="PictureName" class="form-control" />
-                <span asp-validation-for="PictureName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
