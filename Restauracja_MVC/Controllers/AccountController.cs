@@ -121,8 +121,8 @@ namespace Restauracja_MVC.Controllers
             }
             return View();
         }
-        [NonAction]
 
+        [NonAction]
         private SqlCommand PreparePasswordCompareCommand(SqlConnection connection, UserLoginViewModel obj)
         {
             string qs = "SELECT [Password] FROM [dbo].[Users] WHERE [Email] = @Email";
@@ -134,8 +134,8 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
-        [NonAction]
 
+        [NonAction]
         private SqlCommand PrepareLoginCommand(SqlConnection connection, string email)
         {
             string qs = "SELECT u.ID, r.Name AS Role, ud.Name, Surname, Phone, c.Name AS City , Address" +
@@ -155,8 +155,8 @@ namespace Restauracja_MVC.Controllers
 
             return command;
         }
-        [NonAction]
 
+        [NonAction]
         public async Task<bool> SignInAsync(SqlDataReader dr, string email)
         {
             if (dr.Read())
@@ -178,8 +178,6 @@ namespace Restauracja_MVC.Controllers
             }
             return false;
         }
-
-        [NonAction]
 
         public async Task<IActionResult> LogoutAsync()
         {

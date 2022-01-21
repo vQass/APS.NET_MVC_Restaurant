@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Meals;
 using System;
@@ -99,7 +100,8 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController/Create
         public ActionResult Create()
         {
-            return View();
+            MealCreate meal = new MealCreate();
+            return View(meal) ;
         }
 
         // POST: MealsController/Create
@@ -181,6 +183,25 @@ namespace Restauracja_MVC.Controllers
                 }
             }
             return null;
+        }
+
+        private List<SelectListItem> GetMealsCategoriesList()
+        {
+            var list = new List<SelectListItem>();
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT ID, Name FROM MealsCategories";
+                using var command = new SqlCommand(qs, connection);
+                command.Connection.Open();
+
+                using SqlDataReader dr = command.ExecuteReader();
+                while (dr.Read())
+                {
+                    list.Add(new SelectListItem { Value = dr["ID"].ToString(), Text = dr["Name"].ToString() });
+                }
+            }
+            return list;
         }
 
         // POST: MealsController/Edit/5
