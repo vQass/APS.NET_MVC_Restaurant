@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Restauracja_MVC.Providers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -73,6 +74,12 @@ namespace Restauracja_MVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // For float values in forms 
+            var cultureInfo = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
         }
     }
 }

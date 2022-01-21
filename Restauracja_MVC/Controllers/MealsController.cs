@@ -36,7 +36,7 @@ namespace Restauracja_MVC.Controllers
             var list = new List<MealListItem>();
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT m.ID, m.Name, m.Price, m.Description, m.Category, mc.Name AS CategoryName FROM Meals AS m " +
+                string qs = "SELECT m.ID, m.Name, m.Price, mc.Name AS Category FROM Meals AS m " +
                     "INNER JOIN MealsCategories mc ON m.Category = mc.ID";
                 using var command = new SqlCommand(qs, connection);
                 command.Connection.Open();
@@ -47,8 +47,7 @@ namespace Restauracja_MVC.Controllers
                     list.Add(new MealListItem()
                     {
                         ID = Int16.Parse(dr["ID"].ToString()),
-                        Category = Byte.Parse(dr["Category"].ToString()),
-                        Description = dr["Description"].ToString(),
+                        Category = dr["Category"].ToString(),
                         Name = dr["Name"].ToString(),
                         Price = float.Parse(dr["Price"].ToString())
                     });
@@ -61,18 +60,20 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController/Details/5
         public ActionResult Details(Int16 id)
         {
-            MealListItem meal = GetMealListItemByID(id);
+            MealDetails meal = GetMealDetailsByID(id);
             if (meal != null)
                 return View(meal);
-            else return RedirectToAction("Index");
+            else return RedirectToAction(nameof(Index));
         }
 
         [NonAction]
-        private MealListItem GetMealListItemByID(Int16 id)
+        private MealDetails GetMealDetailsByID(Int16 id)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT * FROM [dbo].[Meals] WHERE ID = @ID";
+                string qs = "SELECT m.ID, m.Name, m.Price, m.Description, mc.Name AS Category FROM Meals AS m " +
+                    "INNER JOIN MealsCategories mc ON m.Category = mc.ID " +
+                    "WHERE m.ID = @ID";
                 using var command = new SqlCommand(qs, connection);
                 command.Connection.Open();
 
@@ -82,10 +83,10 @@ namespace Restauracja_MVC.Controllers
                 using SqlDataReader dr = command.ExecuteReader();
                 if (dr.Read())
                 {
-                    return new MealListItem()
+                    return new MealDetails()
                     {
                         ID = Int16.Parse(dr["ID"].ToString()),
-                        Category = Byte.Parse(dr["Category"].ToString()),
+                        Category = dr["Category"].ToString(),
                         Description = dr["Description"].ToString(),
                         Name = dr["Name"].ToString(),
                         Price = float.Parse(dr["Price"].ToString())
@@ -104,7 +105,7 @@ namespace Restauracja_MVC.Controllers
         // POST: MealsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Meal meal)
+        public ActionResult Create(MealCreate meal)
         {
             try
             {
@@ -122,7 +123,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private void AddMeal(Meal meal)
+        private void AddMeal(MealCreate meal)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = "INSERT INTO [dbo].[Meals] ([Name], [Price], [Description], [Category])" +
@@ -146,16 +147,46 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController/Edit/5
         public ActionResult Edit(Int16 id)
         {
-            Meal meal = GetMealListItemByID(id);
+            MealCreate meal = GetMealCreateByID(id);
             if (meal != null)
                 return View(meal);
-            else return RedirectToAction("Index");
+            else return RedirectToAction(nameof(Index));
+
+        }
+
+        [NonAction]
+        private MealCreate GetMealCreateByID(Int16 id)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT m.ID, m.Name, m.Price, m.Description, m.Category FROM Meals AS m " +
+                    "INNER JOIN MealsCategories mc ON m.Category = mc.ID " +
+                    "WHERE m.ID = @ID";
+                using var command = new SqlCommand(qs, connection);
+                command.Connection.Open();
+
+                command.Parameters.Add("@ID", System.Data.SqlDbType.SmallInt);
+                command.Parameters["@ID"].Value = id;
+
+                using SqlDataReader dr = command.ExecuteReader();
+                if (dr.Read())
+                {
+                    return new MealCreate()
+                    {
+                        Category = Byte.Parse(dr["Category"].ToString()),
+                        Description = dr["Description"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Price = float.Parse(dr["Price"].ToString())
+                    };
+                }
+            }
+            return null;
         }
 
         // POST: MealsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Int16 id, Meal meal)
+        public ActionResult Edit(Int16 id, MealCreate meal)
         {
             try
             {
@@ -169,11 +200,11 @@ namespace Restauracja_MVC.Controllers
             {
                 ViewBag.Error = e.Message;
             }
-            return View(); // meal inside???
+            return View(); 
         }
 
         [NonAction]
-        public void UpdateMeal(Int16 id, Meal meal)
+        public void UpdateMeal(Int16 id, MealCreate meal)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = "UPDATE [dbo].[Meals] " +
@@ -200,16 +231,17 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController/Delete/5
         public ActionResult Delete(Int16 id)
         {
-            Meal meal = GetMealListItemByID(id);
+            MealDetails meal =  GetMealDetailsByID(id);
             if (meal != null)
                 return View(meal);
-            else return RedirectToAction("Index");
+            else return RedirectToAction(nameof(Index));
+
         }
 
         // POST: MealsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Int16 id, Meal meal)
+        public ActionResult Delete(Int16 id, MealDetails meal)
         {
             try
             {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Models.Meals
 {
-    public class MealListItem
+    public class MealDetails
     {
         public Int16 ID { get; set; }
 
@@ -15,8 +16,11 @@ namespace Restauracja_MVC.Models.Meals
 
         [DisplayName("Cena")]
         public float Price { get; set; }
+        
+        [DisplayName("Opis")]
+        public string Description { get; set; }
 
         [DisplayName("Kategoria")]
-        public String Category { get; set; }
+        public string Category { get; set; }
     }
 }
