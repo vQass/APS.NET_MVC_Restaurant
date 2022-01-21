@@ -101,6 +101,7 @@ namespace Restauracja_MVC.Controllers
         public ActionResult Create()
         {
             MealCreate meal = new MealCreate();
+            meal.MealsCategories = GetMealsCategoriesList();
             return View(meal) ;
         }
 
@@ -150,6 +151,7 @@ namespace Restauracja_MVC.Controllers
         public ActionResult Edit(Int16 id)
         {
             MealCreate meal = GetMealCreateByID(id);
+            meal.MealsCategories = GetMealsCategoriesList();
             if (meal != null)
                 return View(meal);
             else return RedirectToAction(nameof(Index));

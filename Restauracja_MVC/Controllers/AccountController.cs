@@ -234,7 +234,6 @@ namespace Restauracja_MVC.Controllers
             return View(EditVM);
         }
         [NonAction]
-
         private SqlCommand PrepareCityListCommand(SqlConnection connection)
         {
             string qs = $"Select ID, Name FROM Cities";
