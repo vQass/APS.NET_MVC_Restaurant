@@ -7,6 +7,6 @@ namespace Restauracja_MVC.Models.Recipes
 {
     public class Recipe
     {
-        public List<int> IngredientIDlist{ get; set; } // sprawdzic typ w bazie
+        public List<short> IngredientIDlist{ get; set; } // sprawdzic typ w bazie
     }
 }

@@ -8,7 +8,7 @@ namespace Restauracja_MVC.Models.Meals
 {
     public class MealListItem
     {
-        public Int16 ID { get; set; }
+        public short ID { get; set; }
 
         [DisplayName("Nazwa")]
         public string Name { get; set; }
@@ -17,6 +17,6 @@ namespace Restauracja_MVC.Models.Meals
         public float Price { get; set; }
 
         [DisplayName("Kategoria")]
-        public String Category { get; set; }
+        public string Category { get; set; }
     }
 }

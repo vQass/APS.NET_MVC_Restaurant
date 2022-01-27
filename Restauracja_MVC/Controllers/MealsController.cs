@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -11,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class MealsController : Controller
     {
 
         private readonly IConfiguration _config;
         private readonly string connectionString;
-
 
         public MealsController(IConfiguration config)
         {
@@ -47,7 +48,7 @@ namespace Restauracja_MVC.Controllers
                 {
                     list.Add(new MealListItem()
                     {
-                        ID = Int16.Parse(dr["ID"].ToString()),
+                        ID = short.Parse(dr["ID"].ToString()),
                         Category = dr["Category"].ToString(),
                         Name = dr["Name"].ToString(),
                         Price = float.Parse(dr["Price"].ToString())
@@ -59,7 +60,7 @@ namespace Restauracja_MVC.Controllers
 
 
         // GET: MealsController/Details/5
-        public ActionResult Details(Int16 id)
+        public ActionResult Details(short id)
         {
             MealDetails meal = GetMealDetailsByID(id);
             if (meal != null)
@@ -68,7 +69,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private MealDetails GetMealDetailsByID(Int16 id)
+        private MealDetails GetMealDetailsByID(short id)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -86,7 +87,7 @@ namespace Restauracja_MVC.Controllers
                 {
                     return new MealDetails()
                     {
-                        ID = Int16.Parse(dr["ID"].ToString()),
+                        ID = short.Parse(dr["ID"].ToString()),
                         Category = dr["Category"].ToString(),
                         Description = dr["Description"].ToString(),
                         Name = dr["Name"].ToString(),
@@ -148,7 +149,7 @@ namespace Restauracja_MVC.Controllers
 
 
         // GET: MealsController/Edit/5
-        public ActionResult Edit(Int16 id)
+        public ActionResult Edit(short id)
         {
             MealCreate meal = GetMealCreateByID(id);
             meal.MealsCategories = GetMealsCategoriesList();
@@ -159,7 +160,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private MealCreate GetMealCreateByID(Int16 id)
+        private MealCreate GetMealCreateByID(short id)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -177,7 +178,7 @@ namespace Restauracja_MVC.Controllers
                 {
                     return new MealCreate()
                     {
-                        Category = Byte.Parse(dr["Category"].ToString()),
+                        Category = byte.Parse(dr["Category"].ToString()),
                         Description = dr["Description"].ToString(),
                         Name = dr["Name"].ToString(),
                         Price = float.Parse(dr["Price"].ToString())
@@ -209,7 +210,7 @@ namespace Restauracja_MVC.Controllers
         // POST: MealsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Int16 id, MealCreate meal)
+        public ActionResult Edit(short id, MealCreate meal)
         {
             try
             {
@@ -227,7 +228,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        public void UpdateMeal(Int16 id, MealCreate meal)
+        public void UpdateMeal(short id, MealCreate meal)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = "UPDATE [dbo].[Meals] " +
@@ -252,7 +253,7 @@ namespace Restauracja_MVC.Controllers
 
 
         // GET: MealsController/Delete/5
-        public ActionResult Delete(Int16 id)
+        public ActionResult Delete(short id)
         {
             MealDetails meal =  GetMealDetailsByID(id);
             if (meal != null)
@@ -264,7 +265,7 @@ namespace Restauracja_MVC.Controllers
         // POST: MealsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Int16 id, MealDetails meal)
+        public ActionResult Delete(short id, MealDetails meal)
         {
             try
             {
@@ -279,7 +280,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private void DeleteMeal(Int16 id)
+        private void DeleteMeal(short id)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = $"DELETE FROM [dbo].[Meals] WHERE id = @ID";

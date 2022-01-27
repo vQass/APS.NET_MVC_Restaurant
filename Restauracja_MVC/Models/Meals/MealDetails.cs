@@ -9,7 +9,7 @@ namespace Restauracja_MVC.Models.Meals
 {
     public class MealDetails
     {
-        public Int16 ID { get; set; }
+        public short ID { get; set; }
 
         [DisplayName("Nazwa")]
         public string Name { get; set; }

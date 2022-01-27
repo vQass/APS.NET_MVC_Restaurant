@@ -7,6 +7,6 @@ namespace Restauracja_MVC.Models.Ingredients
 {
     public class IngredientListItem : Ingredient
     {
-        public Int16 ID { get; set; }
+        public short ID { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace Restauracja_MVC.Models.Meals
         public string Description { get; set; }
 
         [DisplayName("Kategoria")]
-        public Byte Category { get; set; }
+        public byte Category { get; set; }
         
         public List<SelectListItem> MealsCategories { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
 
