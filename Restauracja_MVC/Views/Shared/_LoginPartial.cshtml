@@ -16,7 +16,6 @@
             }*@
 
 
-        // Nie powinno tutaj byc raczej
         @if (@User.Claims.Any(x => x.Type == System.Security.Claims.ClaimTypes.Role))
         {
             @if (@User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Role).Value == "Admin")
@@ -28,8 +27,6 @@
                 </li>
             }
         }
-
-
 
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Account"
@@ -43,12 +40,6 @@
     }
     else
     {
-        // Temp
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="AdminPanel" asp-action="Index">
-                Panel administratora
-            </a>
-        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Zarejestruj</a>
         </li>

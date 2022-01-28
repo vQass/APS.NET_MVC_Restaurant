@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Recipes;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RecipesController : Controller
     {
         private readonly IConfiguration _config;
@@ -26,7 +28,7 @@ namespace Restauracja_MVC.Controllers
             List<RecipesListItem> list = new List<RecipesListItem>();
             list.Add(new RecipesListItem {
                 MealID = 2,
-                IngredientIDlist = new List<int>() {
+                IngredientIDlist = new List<short>() {
                 1, 2, 3, 4
                 }
             });

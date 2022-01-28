@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Ingredients;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class IngredientsController : Controller
     {
 
@@ -36,28 +38,24 @@ namespace Restauracja_MVC.Controllers
             using (var connection = new SqlConnection(connectionString))
             {
                 string qs = "SELECT * FROM [Ingredients]";
-                using (var command = new SqlCommand(qs, connection))
-                {
-                    command.Connection.Open();
+                using var command = new SqlCommand(qs, connection);
+                command.Connection.Open();
 
-                    using (SqlDataReader dr = command.ExecuteReader())
+                using SqlDataReader dr = command.ExecuteReader();
+                while (dr.Read())
+                {
+                    list.Add(new IngredientListItem()
                     {
-                        while (dr.Read())
-                        {
-                            list.Add(new IngredientListItem()
-                            {
-                                ID = Int16.Parse(dr["ID"].ToString()),
-                                Name = dr["Name"].ToString(),
-                            });
-                        }
-                    }
+                        ID = Int16.Parse(dr["ID"].ToString()),
+                        Name = dr["Name"].ToString(),
+                    });
                 }
             }
             return list;
         }
 
         [NonAction]
-        private IngredientListItem GetMealListItemByID(Int16 id)
+        private IngredientListItem GetMealListItemByID(short id)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -123,7 +121,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         // GET: IngredientsController/Edit/5
-        public ActionResult Edit(Int16 id)
+        public ActionResult Edit(short id)
         {
             IngredientListItem ingredient = GetMealListItemByID(id);
             if (ingredient != null)
@@ -134,7 +132,7 @@ namespace Restauracja_MVC.Controllers
         // POST: IngredientsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Int16 id, Ingredient ingredient)
+        public ActionResult Edit(short id, Ingredient ingredient)
         {
             try
             {
@@ -152,7 +150,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        public void UpdateIngredient(Int16 id, Ingredient ingredient)
+        public void UpdateIngredient(short id, Ingredient ingredient)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = "UPDATE [dbo].[Ingredients] " +
@@ -170,7 +168,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         // GET: IngredientsController/Delete/5
-        public ActionResult Delete(Int16 id)
+        public ActionResult Delete(short id)
         {
             IngredientListItem ingredient = GetMealListItemByID(id);
             if (ingredient != null)
@@ -181,7 +179,7 @@ namespace Restauracja_MVC.Controllers
         // POST: IngredientsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Int16 id, Ingredient ingredient)
+        public ActionResult Delete(short id, Ingredient ingredient)
         {
             try
             {
@@ -196,7 +194,7 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private void DeleteIngredient(Int16 id)
+        private void DeleteIngredient(short id)
         {
             using var connection = new SqlConnection(connectionString);
             string qs = $"DELETE FROM [dbo].[Ingredients] WHERE id = @ID";

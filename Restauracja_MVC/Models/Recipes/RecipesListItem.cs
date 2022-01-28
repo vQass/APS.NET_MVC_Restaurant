@@ -7,6 +7,6 @@ namespace Restauracja_MVC.Models.Recipes
 {
     public class RecipesListItem : Recipe
     {
-        public int MealID { get; set; }
+        public short MealID { get; set; }
     }
 }

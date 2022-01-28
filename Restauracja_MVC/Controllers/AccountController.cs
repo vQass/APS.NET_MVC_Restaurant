@@ -6,7 +6,6 @@ using Restauracja_MVC.Models;
 using Restauracja_MVC.Models.AccountViewModel;
 using Restauracja_MVC.Providers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -262,61 +261,63 @@ namespace Restauracja_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var connection = new SqlConnection(connectionString))
+                using var connection = new SqlConnection(connectionString);
+
+                long id = long.Parse(User.Claims.Where(x => x.Type.EndsWith("nameidentifier")).FirstOrDefault().Value);
+
+                var command = PrepareEditCommand(connection, id, EditVM.User);
+
+                try
                 {
-                    string id = User.Claims.Where(x => x.Type.EndsWith("nameidentifier")).FirstOrDefault().Value;
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
 
-                    var command = PrepareEditCommand(connection, id, EditVM.User);
+                    string email = User.Claims.Where(x => x.Type.EndsWith("emailaddress")).FirstOrDefault().Value;
 
-                    try
-                    {
-                        command.Connection.Open();
-                        command.ExecuteNonQuery();
+                    await _userManager.SignOut(this.HttpContext);
 
-                        string email = User.Claims.Where(x => x.Type.EndsWith("emailaddress")).FirstOrDefault().Value;
+                    command = PrepareLoginCommand(connection, email);
 
-                        await _userManager.SignOut(this.HttpContext);
+                    SqlDataReader dr = command.ExecuteReader();
 
-                        command = PrepareLoginCommand(connection, email);
-
-                        SqlDataReader dr = command.ExecuteReader();
-
-                        if (await SignInAsync(dr, email))
-                            return RedirectToAction("Profile");
-                    }
-                    catch (Exception e)
-                    {
-                        ViewBag.Error = e.Message;
-                    }
+                    if (await SignInAsync(dr, email))
+                        return RedirectToAction("Profile");
+                }
+                catch (Exception e)
+                {
+                    ViewBag.Error = e.Message;
                 }
             }
             return View(EditVM);
         }
 
         [NonAction]
-        private SqlCommand PrepareEditCommand(SqlConnection connection, string id, UserEditViewModel user)
+        private SqlCommand PrepareEditCommand(SqlConnection connection, long id, UserEditViewModel user)
         {
-            string qs = $"UPDATE UsersDetails SET Name = @Name, Surname = @Surname, Phone = @Phone, CityID = @CityID, Address = @Address WHERE ID = {id}";
+            string qs = $"UPDATE UsersDetails SET Name = @Name, Surname = @Surname, Phone = @Phone, CityID = @CityID, Address = @Address WHERE ID = @ID";
 
             SqlCommand command = new SqlCommand(qs, connection);
 
-            command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
+            command.Parameters.Add("@ID", SqlDbType.BigInt);
+            command.Parameters["@ID"].Value = id;
+
+            command.Parameters.Add("@Name", SqlDbType.VarChar);
             command.Parameters["@Name"].IsNullable = true;
             command.Parameters["@Name"].Value = (object)user.Name ?? DBNull.Value;
 
-            command.Parameters.Add("@Surname", System.Data.SqlDbType.VarChar);
+            command.Parameters.Add("@Surname", SqlDbType.VarChar);
             command.Parameters["@Surname"].IsNullable = true;
             command.Parameters["@Surname"].Value = (object)user.Surname ?? DBNull.Value;
 
-            command.Parameters.Add("@Phone", System.Data.SqlDbType.VarChar);
+            command.Parameters.Add("@Phone", SqlDbType.VarChar);
             command.Parameters["@Phone"].IsNullable = true;
             command.Parameters["@Phone"].Value = (object)user.Phone ?? DBNull.Value;
 
-            command.Parameters.Add("@CityID", System.Data.SqlDbType.SmallInt);
+            command.Parameters.Add("@CityID", SqlDbType.TinyInt);
             command.Parameters["@CityID"].IsNullable = true;
             command.Parameters["@CityID"].Value = (object)user.City ?? DBNull.Value;
 
-            command.Parameters.Add("@Address", System.Data.SqlDbType.VarChar);
+            command.Parameters.Add("@Address", SqlDbType.VarChar);
             command.Parameters["@Address"].IsNullable = true;
             command.Parameters["@Address"].Value = (object)user.Address ?? DBNull.Value;
 
