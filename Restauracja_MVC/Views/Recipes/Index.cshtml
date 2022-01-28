@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<Restauracja_MVC.Models.Recipes.RecipesListItem>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Panel administratora - przepisy";
 }
 
-<h1>Index</h1>
+<h1>Panel administratora - przepisy</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -16,7 +13,13 @@
                 @Html.DisplayNameFor(model => model.MealID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IngredientIDlist)
+                @Html.DisplayNameFor(model => model.Meal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredientlist)
             </th>
             <th></th>
         </tr>
@@ -28,8 +31,13 @@
                 @Html.DisplayFor(modelItem => item.MealID)
             </td>
             <td>
-                <!--@Html.DisplayFor(modelItem => item.IngredientIDlist)--> @*Works like shit*@
-                @foreach(var ingredient in item.IngredientIDlist)
+                @Html.DisplayFor(modelItem => item.Meal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @foreach(var ingredient in item.Ingredientlist)
                 {
                     @ingredient.ToString()
                     <br>
@@ -37,9 +45,7 @@
 
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.MealID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.MealID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.MealID })
+                @Html.ActionLink("Edytuj", "Edit", new { id = item.MealID })
             </td>
         </tr>
 }

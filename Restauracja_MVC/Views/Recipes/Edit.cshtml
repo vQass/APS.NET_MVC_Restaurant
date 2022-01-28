@@ -1,0 +1,59 @@
+﻿@model Restauracja_MVC.Models.Recipes.RecipeEdit
+
+@{
+    ViewData["Title"] = "Edytuj przepis";
+}
+
+<h1>Edytuj przepis</h1>
+<br />
+<h2>@Model.MealName </h2>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientsAdded)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.IngredientsAdded)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.ActionLink("Usuń", "RemoveIngredient", new { ingredientID = item.Key, mealID = Model.MealID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientsNotAdded)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.IngredientsNotAdded)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.ActionLink("Dodaj", "AddIngredient", new { ingredientID = item.Key, mealID = Model.MealID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

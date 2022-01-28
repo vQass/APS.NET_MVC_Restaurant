@@ -16,7 +16,7 @@ namespace Restauracja_MVC.Models.AccountViewModel
 
         [DisplayName("Nazwisko")]
         [StringLength(50, ErrorMessage = "Nazwisko może zawierać maksymalnie 50 znaków")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*$", ErrorMessage = "Imię musi zaczynać się z dużej litery oraz zawierać tylko litery")]
+        [RegularExpression(@"^[A-Z][a-zA-Z]*$", ErrorMessage = "Nazwisko musi zaczynać się z dużej litery oraz zawierać tylko litery")]
         public string Surname { get; set; }
 
         [DisplayName("Miasto")]

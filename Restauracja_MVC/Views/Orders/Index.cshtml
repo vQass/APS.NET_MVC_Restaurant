@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Restauracja_MVC.Models.Orders.OrderListItem>
+
+@{
+    ViewData["Title"] = "Panel administratora - zamówienia";
+}
+
+<h1>Panel administratora - zamówienia</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderDate)
+            </td>
+            <td>
+                @Html.ActionLink("Szczegóły", "Details", new { id = item.OrderID }) |
+                @Html.ActionLink("Usuń", "Delete", new { id = item.OrderID })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
