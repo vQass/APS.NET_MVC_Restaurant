@@ -1,0 +1,117 @@
+﻿@model List<Restauracja_MVC.Models.Zamowienia.Zamowienie>
+
+@{
+    ViewData["Title"] = "NoweMenu";
+}
+
+<h1>Menu</h1>
+
+@using (Html.BeginForm("Index", "OrdersSelected", FormMethod.Post))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nazwa dania
+                </th>
+                <th>
+                    Cena
+                </th>
+                <th>
+                    Ilość sztuk
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(b => b[i].IDx, new { @class = "IDx" })
+                        @Html.DisplayFor(modelItem => modelItem[i].NameOfMeal)
+                        @Html.HiddenFor(b => b[i].NameOfMeal, new { @class = "Namex" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].Pricex) zł
+                        @Html.HiddenFor(b => b[i].Pricex, new { @class = "Pricex" })
+                    </td>
+                    <td>
+                        @Html.HiddenFor(b => b[i].Categoryx, new { @class = "Categoryx" })
+                        @Html.HiddenFor(b => b[i].Descriptionx, new { @class = "Descriptionx" })
+                        <select required asp-for="@Model[i].Amountx">
+                            <option value="0" selected> 0 </option>
+                            <option value="1"> 1 </option>
+                            <option value="2"> 2 </option>
+                            <option value="3"> 3 </option>
+                            <option value="4"> 4 </option>
+                            <option value="5"> 5 </option>
+                            <option value="6"> 6 </option>
+                            <option value="7"> 7 </option>
+                            <option value="8"> 8 </option>
+                            <option value="9"> 9 </option>
+                            <option value="10"> 10 </option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><br /><h3> Podaj dane do zamówienia </h3><br /><br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Imie
+                </th>
+                <th>
+                    Nazwisko
+                </th>
+                <th>
+                    Miasto
+                </th>
+                <th>
+                    Adres
+                </th>
+                <th>
+                    Numer telefonu
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input asp-for="@Model[0].NameOfUser" class="form-control">
+                        <span asp-validation-for="@Model[0].NameOfUser" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input asp-for="@Model[0].SurnameOfUser" class="form-control">
+                        <span asp-validation-for="@Model[0].SurnameOfUser" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <select required asp-for="@Model[0].CityIDx">
+                        <option value="1" selected> Gliwice </option>
+                        <option value="2"> Katowice </option>
+                        <option value="3"> Zabrze </option>
+                    </select>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input asp-for="@Model[0].Addressx" class="form-control">
+                        <span asp-validation-for="@Model[0].Addressx" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input asp-for="@Model[0].Phonex" class="form-control">
+                        <span asp-validation-for="@Model[0].Phonex" class="text-danger"></span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" value="Zamów" class="btn btn-dark" />
+}

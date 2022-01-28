@@ -1,0 +1,41 @@
+﻿@model List<Restauracja_MVC.Models.Skladniki>
+
+@{
+    ViewData["Title"] = "Filtrowanie";
+}
+
+<h1>Wybierz składniki, których nie chcesz w swoim daniu</h1><br />
+<h3> Jeśli akceptujesz wszystkie składniki, przejdź dalej </h3>
+
+@using (Html.BeginForm("FilteredMeals", "Zamowienia", FormMethod.Post))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nazwa składnika
+                </th>
+                <th>
+                    Zaznacz
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(a => a[i].IDsk, new { @class = "IDa" })
+                        @Html.DisplayFor(modelItem => modelItem[i].Namesk)
+                        @Html.HiddenFor(a => a[i].Namesk, new { @class = "Namea" })
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(a => a[i].isCheckedsk, new { @class = "isCheckedsk" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Filtruj" class="btn btn-dark" />
+}
