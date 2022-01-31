@@ -4,7 +4,18 @@
     ViewData["Title"] = "Filtrowanie";
 }
 
-<h1>Wybierz składniki, których nie chcesz w swoim daniu</h1><br />
+@if (TempData["FailedForm"] != null)
+{
+    <div class="alert alert-danger alert-dismissable text-center">
+          <h3>Formularz został wypełniony w nieprawidłowy sposób!</h3><br /><br />
+        <h5>Uzupełnij go jeszcze raz - w razie problemów najedź kursorem myszy na pole tekstowe do wprowadzania danych.</h5><br />
+        <h5>W razie problemów skontaktuj się z nami pod numerem telefonu 123 321 123</h5>
+        
+    </div>
+}
+
+<h1>Wybierz składniki, których nie chcesz w swoim daniu</h1>
+<br />
 <h3> Jeśli akceptujesz wszystkie składniki, przejdź dalej </h3>
 
 @using (Html.BeginForm("FilteredMeals", "Zamowienia", FormMethod.Post))

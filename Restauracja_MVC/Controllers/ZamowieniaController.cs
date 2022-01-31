@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models;
 using Restauracja_MVC.Models.Meals;
 using Restauracja_MVC.Models.Zamowienia;
+using Restauracja_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -102,7 +103,9 @@ namespace Restauracja_MVC.Controllers
                     });
                 }
             }
-            return View(listOfFilteredMeals);
+            var newModelOfOrders = new zamowienieViewModel();
+            newModelOfOrders.listaZamowien = listOfFilteredMeals;
+            return View(newModelOfOrders);
         }
 
     }

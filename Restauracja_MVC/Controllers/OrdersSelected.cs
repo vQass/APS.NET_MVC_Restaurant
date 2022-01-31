@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models;
 using Restauracja_MVC.Models.Meals;
 using Restauracja_MVC.Models.Zamowienia;
+using Restauracja_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace Restauracja_MVC.Controllers
         private readonly IConfiguration _config;
         private readonly string connectionString;
 
+
         public OrdersSelected(IConfiguration config)
         {
             _config = config;
@@ -27,17 +29,17 @@ namespace Restauracja_MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(List<Zamowienie> list)
+        public IActionResult Index(zamowienieViewModel vm)
         {
-
             if (!ModelState.IsValid)
             {
+                TempData["FailedForm"] = "Formularz zostal blednie wypelniony";
                 return RedirectToAction("Index", "Zamowienia");
             }
             else
             {
                 List<Zamowienie> zamowienieFinalne = new List<Zamowienie>();
-                foreach (var item in list)
+                foreach (var item in vm.listaZamowien)
                 {
                     if (item.Amountx != 0)
                     {
@@ -84,10 +86,25 @@ namespace Restauracja_MVC.Controllers
                     }
                     wartoscZamowienia.ToString("0.00");
                     String CurrentUser = User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-                    qsSetOrderDetails += "(" + (MaxOrderID + 1) + "," + CurrentUser + "," + list[0].CityIDx + "," + "\'" + list[0].NameOfUser + "\'" + "," + "\'" + list[0].SurnameOfUser + "\'," + "\'" + list[0].Addressx + "\'," + "\'" + list[0].Phonex + "\'," + wartoscZamowienia + ");";
+                    qsSetOrderDetails += "(" + (MaxOrderID + 1) + "," + CurrentUser + ", @CityIDx, @NameOfUser, @SurnameOfUser, @Addressx, @Phonex," + wartoscZamowienia + ");";
 
                     using var commandSetOrderDetails = new SqlCommand(qsSetOrderDetails, connectionSetOrderDetails);
                     commandSetOrderDetails.Connection.Open();
+
+                    commandSetOrderDetails.Parameters.Add("@CityIDx", System.Data.SqlDbType.Int);
+                    commandSetOrderDetails.Parameters["@CityIDx"].Value = vm.CityIDx;
+
+                    commandSetOrderDetails.Parameters.Add("@NameOfUser", System.Data.SqlDbType.VarChar);
+                    commandSetOrderDetails.Parameters["@NameOfUser"].Value = vm.NameOfUser;
+
+                    commandSetOrderDetails.Parameters.Add("@SurnameOfUser", System.Data.SqlDbType.VarChar);
+                    commandSetOrderDetails.Parameters["@SurnameOfUser"].Value = vm.SurnameOfUser;
+
+                    commandSetOrderDetails.Parameters.Add("@Addressx", System.Data.SqlDbType.VarChar);
+                    commandSetOrderDetails.Parameters["@Addressx"].Value = vm.Addressx;
+
+                    commandSetOrderDetails.Parameters.Add("@Phonex", System.Data.SqlDbType.VarChar);
+                    commandSetOrderDetails.Parameters["@Phonex"].Value = vm.Phonex;
 
                     using SqlDataReader dr3 = commandSetOrderDetails.ExecuteReader();
 
@@ -103,11 +120,7 @@ namespace Restauracja_MVC.Controllers
                     string qsSetOrders = "INSERT INTO Orders VALUES ";
                     foreach (var item in zamowienieFinalne)
                     {
-                        if ((zamowienieFinalne.Count() == 1))
-                        {
-                            qsSetOrders += " (" + (MaxOrderID + 1) + "," + item.IDx + "," + item.Amountx + ");";
-                        }
-                        else if (item == zamowienieFinalne.Last())
+                        if ((zamowienieFinalne.Count == 1) || item == zamowienieFinalne.Last())
                         {
                             qsSetOrders += " (" + (MaxOrderID + 1) + "," + item.IDx + "," + item.Amountx + ");";
                         }
@@ -124,6 +137,7 @@ namespace Restauracja_MVC.Controllers
                     connectionSetOrders.Close();
                 }
 
+                ViewBag.Success = true;
                 return View("~/Views/Home/Index.cshtml");
             }
         }
