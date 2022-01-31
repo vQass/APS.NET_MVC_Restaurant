@@ -103,11 +103,10 @@
                     </div>
                 </td>
                 <td>
-                    <select required asp-for="@Model.CityIDx" class="form-control">
-                        <option value="1" selected> Gliwice </option>
-                        <option value="2"> Katowice </option>
-                        <option value="3"> Zabrze </option>
-                    </select>
+                    <div class="form-group">
+                        <select asp-for="@Model.CityIDx" asp-items="Model.CityList" class="form-control"></select>
+                        <span asp-validation-for="@Model.CityIDx" class="text-danger"></span>
+                    </div>
                 </td>
                 <td>
                     <div class="form-group" title="Wprowadz adres">

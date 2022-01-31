@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models;
 using Restauracja_MVC.Models.Zamowienia;
@@ -100,7 +101,7 @@ namespace Restauracja_MVC.Controllers
                         Categoryx = dr["Category"].ToString()
                     });
                 }
-                qs = "SELECT Name, Surname, Phone, Address FROM UsersDetails WHERE ID = @ID";
+                qs = "SELECT Name, Surname, Phone, Address, CityID FROM UsersDetails WHERE ID = @ID";
                 command.CommandText = qs;
 
                 long id = long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
@@ -113,20 +114,42 @@ namespace Restauracja_MVC.Controllers
 
                 using SqlDataReader dr2 = command.ExecuteReader();
 
-                
-                if(dr2.Read())
+
+                if (dr2.Read())
                 {
                     newModelOfOrders.NameOfUser = dr2["Name"].ToString();
                     newModelOfOrders.SurnameOfUser = dr2["Surname"].ToString();
                     newModelOfOrders.Phonex = dr2["Phone"].ToString();
                     newModelOfOrders.Addressx = dr2["Address"].ToString();
+                    short tempCity = 1;
+                    short.TryParse(dr2["CityID"].ToString(), out tempCity);
+                    newModelOfOrders.CityIDx = tempCity;
                 }
-
             }
+
+            newModelOfOrders.CityList = GetCitySelectList();
 
             newModelOfOrders.listaZamowien = listOfFilteredMeals;
             return View(newModelOfOrders);
         }
 
+        [NonAction]
+        private List<SelectListItem> GetCitySelectList()
+        {
+
+            using var connection = new SqlConnection(connectionString);
+            string qs = "SELECT * FROM Cities";
+            using var command = new SqlCommand(qs, connection);
+            command.Connection.Open();
+
+            var cities = new List<SelectListItem>();
+
+            using SqlDataReader dr = command.ExecuteReader();
+            while (dr.Read())
+            {
+                cities.Add(new SelectListItem { Value = dr["ID"].ToString(), Text = dr["Name"].ToString() });
+            }
+            return cities;
+        }
     }
 }

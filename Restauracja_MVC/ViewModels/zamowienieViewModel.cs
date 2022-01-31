@@ -1,4 +1,5 @@
-﻿using Restauracja_MVC.Models.Zamowienia;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Restauracja_MVC.Models.Zamowienia;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,5 +22,6 @@ namespace Restauracja_MVC.ViewModels
         [Phone]
         public String Phonex { get; set; }
         public List<Zamowienie> listaZamowien { get; set; }
+        public List<SelectListItem> CityList { get; set; }
     }
 }
