@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models;
-using Restauracja_MVC.Models.Meals;
 using Restauracja_MVC.Models.Zamowienia;
 using Restauracja_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -59,7 +57,7 @@ namespace Restauracja_MVC.Controllers
                     tab.Add(" i.ID = " + item.IDsk.ToString()); // Lista w której są ID składników zaznaczonych przez usera
                 }
             }
-
+            var newModelOfOrders = new zamowienieViewModel();
             using (var connection = new SqlConnection(connectionString))
             {
                 if (tab.Count > 0)
@@ -102,8 +100,30 @@ namespace Restauracja_MVC.Controllers
                         Categoryx = dr["Category"].ToString()
                     });
                 }
+                qs = "SELECT Name, Surname, Phone, Address FROM UsersDetails WHERE ID = @ID";
+                command.CommandText = qs;
+
+                long id = long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+                command.Parameters.Add("@ID", System.Data.SqlDbType.BigInt);
+                command.Parameters["@ID"].Value = id;
+
+
+                dr.Close();
+
+                using SqlDataReader dr2 = command.ExecuteReader();
+
+                
+                if(dr2.Read())
+                {
+                    newModelOfOrders.NameOfUser = dr2["Name"].ToString();
+                    newModelOfOrders.SurnameOfUser = dr2["Surname"].ToString();
+                    newModelOfOrders.Phonex = dr2["Phone"].ToString();
+                    newModelOfOrders.Addressx = dr2["Address"].ToString();
+                }
+
             }
-            var newModelOfOrders = new zamowienieViewModel();
+
             newModelOfOrders.listaZamowien = listOfFilteredMeals;
             return View(newModelOfOrders);
         }

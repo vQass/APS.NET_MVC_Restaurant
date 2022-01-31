@@ -52,9 +52,9 @@ namespace Restauracja_MVC.Controllers
                         command.ExecuteNonQuery();
                         return RedirectToAction("Index", "Home");
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        ViewBag.Error = e.Message;
+                        ViewBag.Error = "Podany email występuje już w bazie danych!";
                     }
                 }
             }

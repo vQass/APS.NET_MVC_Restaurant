@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +6,6 @@ using Restauracja_MVC.Models.Meals;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -103,7 +100,7 @@ namespace Restauracja_MVC.Controllers
         {
             MealCreate meal = new MealCreate();
             meal.MealsCategories = GetMealsCategoriesList();
-            return View(meal) ;
+            return View(meal);
         }
 
         // POST: MealsController/Create
@@ -119,7 +116,7 @@ namespace Restauracja_MVC.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.Error = e.Message;
             }
@@ -224,7 +221,7 @@ namespace Restauracja_MVC.Controllers
             {
                 ViewBag.Error = e.Message;
             }
-            return View(); 
+            return View();
         }
 
         [NonAction]
@@ -255,7 +252,7 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController/Delete/5
         public ActionResult Delete(short id)
         {
-            MealDetails meal =  GetMealDetailsByID(id);
+            MealDetails meal = GetMealDetailsByID(id);
             if (meal != null)
                 return View(meal);
             else return RedirectToAction(nameof(Index));

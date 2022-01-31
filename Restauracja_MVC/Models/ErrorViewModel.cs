@@ -1,5 +1,3 @@
-using System;
-
 namespace Restauracja_MVC.Models
 {
     public class ErrorViewModel

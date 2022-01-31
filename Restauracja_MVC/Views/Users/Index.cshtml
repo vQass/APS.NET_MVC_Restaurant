@@ -20,20 +20,25 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.ActionLink("Edytuj", "Edit", new { item.ID }) |
-                @Html.ActionLink("Szczegóły", "Details", new { item.ID }) |
-                @Html.ActionLink("Usuń", "Delete", new { item.ID })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.ActionLink("Edytuj", "Edit", new { item.ID }) |
+                    @Html.ActionLink("Szczegóły", "Details", new { item.ID }) 
+                    @if (item.ID != long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+                    {
+                        <span>|</span>
+                        @Html.ActionLink("Usuń", "Delete", new { item.ID })
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

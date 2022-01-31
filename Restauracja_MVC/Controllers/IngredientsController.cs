@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Ingredients;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -136,7 +133,7 @@ namespace Restauracja_MVC.Controllers
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     UpdateIngredient(id, ingredient);
                     return RedirectToAction(nameof(Index));
@@ -198,7 +195,7 @@ namespace Restauracja_MVC.Controllers
         {
             using var connection = new SqlConnection(connectionString);
             string qs = $"DELETE FROM [dbo].[Ingredients] WHERE id = @ID";
-            
+
             using var command = new SqlCommand(qs, connection);
 
             command.Parameters.Add("@ID", System.Data.SqlDbType.SmallInt);

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Restauracja_MVC.Models.Meals
 {
-    public class MealCreate 
+    public class MealCreate
     {
         [DisplayName("Nazwa")]
         [Required(ErrorMessage = "Pole nazwa jest wymagane")]
@@ -23,7 +23,7 @@ namespace Restauracja_MVC.Models.Meals
 
         [DisplayName("Kategoria")]
         public byte Category { get; set; }
-        
+
         public List<SelectListItem> MealsCategories { get; set; }
     }
 }

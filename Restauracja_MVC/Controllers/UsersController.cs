@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -60,7 +58,7 @@ namespace Restauracja_MVC.Controllers
             UserDetails user = GetUserDetailsByID(id);
             if (user != null)
             {
-                if(user.City != "")
+                if (user.City != "")
                 {
                     user.City = GetCityName(user.City);
                 }
@@ -90,7 +88,7 @@ namespace Restauracja_MVC.Controllers
                 using SqlDataReader dr = command.ExecuteReader();
                 if (dr.Read())
                 {
-                    return new UserDetails()    
+                    return new UserDetails()
                     {
                         ID = long.Parse(dr["ID"].ToString()),
                         Email = dr["Email"].ToString(),
@@ -310,6 +308,8 @@ namespace Restauracja_MVC.Controllers
         // GET: UsersController/Delete/5
         public ActionResult Delete(long id)
         {
+            if (id == long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+                return RedirectToAction(nameof(Index));
             UserDetails user = GetUserDetailsByID(id);
             if (user != null)
                 return View(user);

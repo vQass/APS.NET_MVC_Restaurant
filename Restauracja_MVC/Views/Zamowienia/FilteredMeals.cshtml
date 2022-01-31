@@ -15,6 +15,9 @@
                     Nazwa dania
                 </th>
                 <th>
+                    Opis
+                </th>
+                <th>
                     Cena
                 </th>
                 <th>
@@ -32,13 +35,16 @@
                         @Html.HiddenFor(b => b.listaZamowien[i].NameOfMeal, new { @class = "Namex" })
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => modelItem.listaZamowien[i].Descriptionx)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => modelItem.listaZamowien[i].Pricex) zł
                         @Html.HiddenFor(b => b.listaZamowien[i].Pricex, new { @class = "Pricex" })
                     </td>
                     <td>
                         @Html.HiddenFor(b => b.listaZamowien[i].Categoryx, new { @class = "Categoryx" })
                         @Html.HiddenFor(b => b.listaZamowien[i].Descriptionx, new { @class = "Descriptionx" })
-                        <select required asp-for="@Model.listaZamowien[i].Amountx">
+                        <select required asp-for="@Model.listaZamowien[i].Amountx" class="form-control" style="max-width: 60px">
                             <option value="0" selected> 0 </option>
                             <option value="1"> 1 </option>
                             <option value="2"> 2 </option>
@@ -97,7 +103,7 @@
                     </div>
                 </td>
                 <td>
-                    <select required asp-for="@Model.CityIDx">
+                    <select required asp-for="@Model.CityIDx" class="form-control">
                         <option value="1" selected> Gliwice </option>
                         <option value="2"> Katowice </option>
                         <option value="3"> Zabrze </option>

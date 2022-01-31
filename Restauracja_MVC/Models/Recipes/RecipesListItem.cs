@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Models.Recipes
 {
-    public class RecipesListItem 
+    public class RecipesListItem
     {
         [DisplayName("ID dania")]
         public short MealID { get; set; }
@@ -18,6 +15,6 @@ namespace Restauracja_MVC.Models.Recipes
         public string Category { get; set; }
 
         [DisplayName("Lista składników")]
-        public List<string> Ingredientlist { get; set; } 
+        public List<string> Ingredientlist { get; set; }
     }
 }

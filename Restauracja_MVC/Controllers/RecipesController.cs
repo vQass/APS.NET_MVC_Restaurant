@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Restauracja_MVC.Models.Recipes;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -44,7 +42,7 @@ namespace Restauracja_MVC.Controllers
 
                 using SqlDataReader dr = command.ExecuteReader();
 
-                while(dr.Read())
+                while (dr.Read())
                 {
                     list.Add(new RecipesListItem()
                     {
@@ -58,12 +56,12 @@ namespace Restauracja_MVC.Controllers
                     "INNER JOIN Ingredients i ON r.IngredientID = i.ID ORDER BY i.Name";
 
                 command.CommandText = qs;
-                
+
                 dr.Close();
 
                 using SqlDataReader dr2 = command.ExecuteReader();
 
-                while(dr2.Read())
+                while (dr2.Read())
                 {
                     recipes.Add(new RecipeElement()
                     {
@@ -72,11 +70,11 @@ namespace Restauracja_MVC.Controllers
                     });
                 }
 
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     var temp = recipes.Where(x => x.MealID == item.MealID);
                     item.Ingredientlist = new List<string>();
-                    foreach(var item2 in temp)
+                    foreach (var item2 in temp)
                     {
                         item.Ingredientlist.Add(item2.Ingredient);
                     }
@@ -128,7 +126,7 @@ namespace Restauracja_MVC.Controllers
 
                     while (dr2.Read())
                     {
-                        recipe.IngredientsAdded.Add(byte.Parse(dr2["IngredientID"].ToString()),dr2["Name"].ToString());
+                        recipe.IngredientsAdded.Add(byte.Parse(dr2["IngredientID"].ToString()), dr2["Name"].ToString());
                     }
 
                     command.Parameters.Clear();
@@ -143,7 +141,7 @@ namespace Restauracja_MVC.Controllers
 
                     while (dr3.Read())
                     {
-                        if(!recipe.IngredientsAdded.ContainsKey(byte.Parse(dr3["ID"].ToString())))
+                        if (!recipe.IngredientsAdded.ContainsKey(byte.Parse(dr3["ID"].ToString())))
                         {
                             recipe.IngredientsNotAdded.Add(byte.Parse(dr3["ID"].ToString()), dr3["Name"].ToString());
                         }
@@ -171,13 +169,14 @@ namespace Restauracja_MVC.Controllers
                 try
                 {
                     command.ExecuteNonQuery();
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     ViewBag.Error = e.Message;
                 }
 
             }
-            return RedirectToAction("Edit", new { id = MealID});
+            return RedirectToAction("Edit", new { id = MealID });
         }
 
         // GET: RecipesController/AddIngredient/5

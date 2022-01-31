@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Restauracja_MVC.Models;
-using Restauracja_MVC.Models.Meals;
 using Restauracja_MVC.Models.Zamowienia;
 using Restauracja_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restauracja_MVC.Controllers
 {
@@ -31,7 +28,7 @@ namespace Restauracja_MVC.Controllers
         [HttpPost]
         public IActionResult Index(zamowienieViewModel vm)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || vm.listaZamowien == null || !vm.listaZamowien.Exists(x => x.Amountx != 0))
             {
                 TempData["FailedForm"] = "Formularz zostal blednie wypelniony";
                 return RedirectToAction("Index", "Zamowienia");
@@ -41,12 +38,12 @@ namespace Restauracja_MVC.Controllers
                 List<Zamowienie> zamowienieFinalne = new List<Zamowienie>();
                 foreach (var item in vm.listaZamowien)
                 {
+
                     if (item.Amountx != 0)
                     {
                         zamowienieFinalne.Add(item);
                     }
                 }
-
 
                 //////////////////////////////////////////////////////////////////////
                 /////////////////Pobieranie max ID ordersDetails//////////////////////
