@@ -2,6 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if (ViewBag.Success == true)
+{
+    <div class="alert alert-success text-center" role="alert">
+        <h4 class="alert-heading">Udało Ci się złożyć zamówienie!</h4>
+        <p>Dziękujemy za złożenie zamówienia w naszej restauracji.<br><br> Nasz kucharz już się za nie zabiera i dotrze ono do Ciebie jak najszybciej!</p>
+        <hr>
+        <p class="mb-0">W razie jakichkolwiek problemów skontaktuj się z nami pod numerem telefonu: 123 321 123</p>
+    </div>
+    ViewBag.Success = false;
+}
+
 <div class="text-center">
     <h1 class="display-4">Restauracja_MVC Wita!</h1>
 </div>
