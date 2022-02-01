@@ -81,7 +81,11 @@ namespace Restauracja_MVC.Controllers
                     {
                         wartoscZamowienia += zamowienieFinalne[i].Amountx * zamowienieFinalne[i].Pricex;
                     }
-                    wartoscZamowienia.ToString("0.00");
+                    if (wartoscZamowienia < 25)
+                    {
+                        wartoscZamowienia += 10; //Dodanie ceny za dostawe
+                    }
+                    //wartoscZamowienia.ToString("0.00");
                     String CurrentUser = User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
                     qsSetOrderDetails += "(" + (MaxOrderID + 1) + "," + CurrentUser + ", @CityIDx, @NameOfUser, @SurnameOfUser, @Addressx, @Phonex," + wartoscZamowienia + ");";
 
