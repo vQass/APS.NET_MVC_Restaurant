@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Restauracja_MVC.Models.Recipes
 {
@@ -9,6 +10,8 @@ namespace Restauracja_MVC.Models.Recipes
         public short MealID { get; set; }
 
         [DisplayName("Nazwa dania")]
+        [MaxLength(50)]
+        [MinLength(1)]
         public string MealName { get; set; }
 
         [DisplayName("Składniki w przepisie")]

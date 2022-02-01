@@ -10,14 +10,18 @@ namespace Restauracja_MVC.Models.Meals
     {
         [DisplayName("Nazwa")]
         [Required(ErrorMessage = "Pole nazwa jest wymagane")]
+        [MaxLength(50)]
+        [MinLength(1)]
         public string Name { get; set; }
 
         [DisplayName("Cena")]
         [Required(ErrorMessage = "Pole cena jest wymagane")]
-        [Range(0.01, 500.01, ErrorMessage = "Wartość pola {0} powinna być większa od {1} i mniejsza od {2}")]
+        [Range(0.01, 500.01, ErrorMessage = "Wartość pola {0} powinna być większa od {1}, a mniejsza od 500")]
         public float Price { get; set; }
 
         [DisplayName("Opis")]
+        [MaxLength(8000)]
+        [MinLength(1)]
         [Required(ErrorMessage = "Pole opis jest wymagane")]
         public string Description { get; set; }
 

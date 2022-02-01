@@ -16,12 +16,10 @@ namespace Restauracja_MVC.Models.Users
 
         [DisplayName("Imię")]
         [StringLength(50, ErrorMessage = "Imię może zawierać maksymalnie 50 znaków")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*$", ErrorMessage = "Imię musi zaczynać się z dużej litery oraz zawierać tylko litery")]
         public string Name { get; set; }
 
         [DisplayName("Nazwisko")]
         [StringLength(50, ErrorMessage = "Nazwisko może zawierać maksymalnie 50 znaków")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*$", ErrorMessage = "Imię musi zaczynać się z dużej litery oraz zawierać tylko litery")]
         public string Surname { get; set; }
 
         [DisplayName("Uprawnienia")]
@@ -29,6 +27,8 @@ namespace Restauracja_MVC.Models.Users
 
         [DisplayName("Numer telefonu")]
         [Phone]
+        [MaxLength(15)]
+        [MinLength(9)]
         public string Phone { get; set; }
 
         [DisplayName("Miasto")]

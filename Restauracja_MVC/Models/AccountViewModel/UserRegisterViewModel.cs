@@ -13,12 +13,13 @@ namespace Restauracja_MVC.Models
         [DisplayName("Hasło")]
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Hasło jest wymagane")]
-        [StringLength(50, ErrorMessage = "Hasło musi zawierać między 5 a 50 znakami", MinimumLength = 4)]
+        [StringLength(50, ErrorMessage = "Hasło musi zawierać między 4 a 50 znakami", MinimumLength = 4)]
         public string Password { get; set; }
 
         [DisplayName("Potwierdź hasło")]
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Potwierdzenie hasła jest wymagane")]
+        [StringLength(50, ErrorMessage = "Hasło musi zawierać między 4 a 50 znakami", MinimumLength = 4)]
         [Compare("Password", ErrorMessage = "Wprowadzone hasła różnią się")]
         public string PasswordConfirm { get; set; }
     }
