@@ -117,15 +117,17 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private bool CheckUniqueIngredient(string name)
+        private bool CheckUniqueIngredient(string name, short id = -1)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT Name FROM Ingredients WHERE Name = @Name";
+                string qs = "SELECT Name FROM Ingredients WHERE Name = @Name AND ID != @ID";
                 using var command = new SqlCommand(qs, connection);
 
                 command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
                 command.Parameters["@Name"].Value = name;
+                command.Parameters.Add("@ID", System.Data.SqlDbType.SmallInt);
+                command.Parameters["@ID"].Value = id;
 
                 command.Connection.Open();
 
@@ -169,7 +171,7 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if(CheckUniqueIngredient(ingredient.Name))
+                    if(CheckUniqueIngredient(ingredient.Name, id))
                     {
                         UpdateIngredient(id, ingredient);
                     }
@@ -185,6 +187,29 @@ namespace Restauracja_MVC.Controllers
                 ViewBag.Error = e.Message;
             }
             return View();
+        }
+
+
+        private bool CheckIfIngredientInUse(short id)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT IngredientID FROM Recipes WHERE IngredientID = @ID";
+                using var command = new SqlCommand(qs, connection);
+
+                command.Parameters.Add("@ID", System.Data.SqlDbType.SmallInt);
+                command.Parameters["@ID"].Value = id;
+
+                command.Connection.Open();
+
+                using SqlDataReader dr = command.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    TempData["Error"] = "Składnik używany w przepisach, brak możliwości usunięcia";
+                    return true;
+                }
+            }
+            return false;
         }
 
         [NonAction]
@@ -221,7 +246,10 @@ namespace Restauracja_MVC.Controllers
         {
             try
             {
-                DeleteIngredient(id);
+                if(!CheckIfIngredientInUse(id))
+                {
+                    DeleteIngredient(id);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)

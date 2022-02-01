@@ -87,15 +87,17 @@ namespace Restauracja_MVC.Controllers
         }
 
         [NonAction]
-        private bool CheckUniqueCity(string name)
+        private bool CheckUniqueCity(string name, byte id = 0)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT Name FROM Cities WHERE Name = @Name";
+                string qs = "SELECT Name FROM Cities WHERE Name = @Name AND ID != @ID";
                 using var command = new SqlCommand(qs, connection);
 
                 command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
                 command.Parameters["@Name"].Value = name;
+                command.Parameters.Add("@ID", System.Data.SqlDbType.TinyInt);
+                command.Parameters["@ID"].Value = id;
 
                 command.Connection.Open();
 
@@ -127,7 +129,7 @@ namespace Restauracja_MVC.Controllers
                 using SqlDataReader dr = command.ExecuteReader();
                 if(dr.HasRows)
                 {
-                    TempData["Error"] = "Miasto używane przez użytkowników, brak możliwości edycji";
+                    TempData["Error"] = "Miasto używane przez użytkowników";
                     return true;
                 }
 
@@ -146,7 +148,7 @@ namespace Restauracja_MVC.Controllers
 
                 if(dr2.HasRows)
                 {
-                    TempData["Error"] = "Miasto używane w zamówieniach, brak możliwości edycji";
+                    TempData["Error"] = "Miasto używane w zamówieniach";
                     return true ;
                 }
             }
@@ -184,7 +186,7 @@ namespace Restauracja_MVC.Controllers
         {
             try
             {
-                if (CheckUniqueCity(city.Name) && !CheckIfCityInUse(id))
+                if (CheckUniqueCity(city.Name, id) && !CheckIfCityInUse(id))
                 {
                     UpdateCity(id, city);
                 }

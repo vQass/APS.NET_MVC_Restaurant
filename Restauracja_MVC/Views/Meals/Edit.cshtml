@@ -26,11 +26,14 @@
                 <textarea rows="3" asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" asp-items="Model.MealsCategories" class="form-control"></select>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
+            @if (Model != null)
+            {
+                <div class="form-group">
+                    <label asp-for="Category" class="control-label"></label>
+                    <select asp-for="Category" asp-items="Model.MealsCategories" class="form-control"></select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>

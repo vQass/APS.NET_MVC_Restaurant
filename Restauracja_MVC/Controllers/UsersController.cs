@@ -154,35 +154,42 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (CheckUniqueEmail(user.Email))
+                    if (CheckUniqueEmail(user.Email, id))
                     {
                         UpdateUser(id, user);
                     }
                     else
                     {
-                        TempData["Error"] = "Wprowadzony email jest już w bazie danych";
+                        TempData["Error"] = "Wprowadzony email jest już zajęty";
                     }
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    user.Cities = GetCitySelectList();
+                    user.Roles = GetRoleSelectList();
                 }
             }
             catch (Exception e)
             {
                 ViewBag.Error = e.Message;
             }
-            return View();
+            return View(user);
         }
 
 
         [NonAction]
-        private bool CheckUniqueEmail(string email)
+        private bool CheckUniqueEmail(string email, long id)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT Name FROM Cities WHERE Name = @Name";
+                string qs = "SELECT Email FROM Users WHERE Email = @Email AND ID != @ID";
                 using var command = new SqlCommand(qs, connection);
 
-                command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
-                command.Parameters["@Name"].Value = email;
+                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Email"].Value = email;
+                command.Parameters.Add("@ID", System.Data.SqlDbType.BigInt);
+                command.Parameters["@ID"].Value = id;
 
                 command.Connection.Open();
 

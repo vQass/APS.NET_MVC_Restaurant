@@ -128,24 +128,30 @@ namespace Restauracja_MVC.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    meal.MealsCategories = GetMealsCategoriesList();
+                }
             }
             catch (Exception e)
             {
                 ViewBag.Error = e.Message;
             }
-            return View();
+            return View(meal);
         }
 
         [NonAction]
-        private bool CheckUniqueMeal(string name)
+        private bool CheckUniqueMeal(string name, short id = -1)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string qs = "SELECT Name FROM Meals WHERE Name = @Name";
+                string qs = "SELECT Name FROM Meals WHERE Name = @Name AND ID != @ID";
                 using var command = new SqlCommand(qs, connection);
 
                 command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
                 command.Parameters["@Name"].Value = name;
+                command.Parameters.Add("@ID", System.Data.SqlDbType.SmallInt);
+                command.Parameters["@ID"].Value = id;
 
                 command.Connection.Open();
 
@@ -247,7 +253,7 @@ namespace Restauracja_MVC.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    if (CheckUniqueMeal(meal.Name))
+                    if (CheckUniqueMeal(meal.Name, id))
                     {
                         UpdateMeal(id, meal);
                     }
