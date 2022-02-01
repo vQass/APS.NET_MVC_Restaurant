@@ -14,7 +14,7 @@ namespace Restauracja_MVC.Models.Meals
 
         [DisplayName("Cena")]
         [Required(ErrorMessage = "Pole cena jest wymagane")]
-        [Range(0.01, 500.01, ErrorMessage = "Wartość pola {0} powinna być większa od {1}")]
+        [Range(0.01, 500.01, ErrorMessage = "Wartość pola {0} powinna być większa od {1} i mniejsza od {2}")]
         public float Price { get; set; }
 
         [DisplayName("Opis")]

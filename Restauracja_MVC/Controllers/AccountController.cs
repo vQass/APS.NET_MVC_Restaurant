@@ -107,8 +107,6 @@ namespace Restauracja_MVC.Controllers
 
                                 if (await SignInAsync(dr, obj.Email))
                                     return RedirectToAction("Index", "Home");
-
-
                             }
                         }
                     }
@@ -124,7 +122,7 @@ namespace Restauracja_MVC.Controllers
         [NonAction]
         private SqlCommand PreparePasswordCompareCommand(SqlConnection connection, UserLoginViewModel obj)
         {
-            string qs = "SELECT [Password] FROM [dbo].[Users] WHERE [Email] = @Email";
+            string qs = "SELECT [Password] FROM [dbo].[Users] WHERE [Email] = @Email AND IsActive = 1";
 
             SqlCommand command = new SqlCommand(qs, connection);
 

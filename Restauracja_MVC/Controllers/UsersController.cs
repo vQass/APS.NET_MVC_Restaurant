@@ -26,6 +26,11 @@ namespace Restauracja_MVC.Controllers
         // GET: UsersController
         public ActionResult Index()
         {
+            if(TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"].ToString();
+                TempData["Error"] = null;
+            }
             return View(GetUsersList());
         }
 
@@ -149,7 +154,14 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    UpdateUser(id, user);
+                    if (CheckUniqueEmail(user.Email))
+                    {
+                        UpdateUser(id, user);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Wprowadzony email jest już w bazie danych";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -159,6 +171,27 @@ namespace Restauracja_MVC.Controllers
             }
             return View();
         }
+
+
+        [NonAction]
+        private bool CheckUniqueEmail(string email)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT Name FROM Cities WHERE Name = @Name";
+                using var command = new SqlCommand(qs, connection);
+
+                command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Name"].Value = email;
+
+                command.Connection.Open();
+
+                using SqlDataReader dr = command.ExecuteReader();
+                return !dr.HasRows;
+            }
+            return false;
+        }
+
 
         [NonAction]
         private UserEdit GetUserEditByID(long id)
@@ -300,7 +333,7 @@ namespace Restauracja_MVC.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Error = e.Message;
+                TempData["Error"] = e.Message;
                 command.Transaction.Rollback();
             }
         }

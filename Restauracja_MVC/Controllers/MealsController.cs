@@ -26,6 +26,11 @@ namespace Restauracja_MVC.Controllers
         // GET: MealsController
         public ActionResult Index()
         {
+            if (TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"].ToString();
+                TempData["Error"] = null;
+            }
             return View(GetMealsList());
         }
 
@@ -103,6 +108,7 @@ namespace Restauracja_MVC.Controllers
             return View(meal);
         }
 
+
         // POST: MealsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -112,7 +118,14 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    AddMeal(meal);
+                    if(CheckUniqueMeal(meal.Name))
+                    {
+                        AddMeal(meal);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Istanieje danie o podanej nazwie";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -122,6 +135,26 @@ namespace Restauracja_MVC.Controllers
             }
             return View();
         }
+
+        [NonAction]
+        private bool CheckUniqueMeal(string name)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT Name FROM Meals WHERE Name = @Name";
+                using var command = new SqlCommand(qs, connection);
+
+                command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Name"].Value = name;
+
+                command.Connection.Open();
+
+                using SqlDataReader dr = command.ExecuteReader();
+                return !dr.HasRows;
+            }
+            return false;
+        }
+
 
         [NonAction]
         private void AddMeal(MealCreate meal)
@@ -134,7 +167,7 @@ namespace Restauracja_MVC.Controllers
 
             command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
             command.Parameters["@Name"].Value = meal.Name;
-            command.Parameters.Add("@Price", System.Data.SqlDbType.Float);
+            command.Parameters.Add("@Price", System.Data.SqlDbType.Money);
             command.Parameters["@Price"].Value = meal.Price;
             command.Parameters.Add("@Description", System.Data.SqlDbType.VarChar);
             command.Parameters["@Description"].Value = meal.Description;
@@ -213,7 +246,15 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    UpdateMeal(id, meal);
+
+                    if (CheckUniqueMeal(meal.Name))
+                    {
+                        UpdateMeal(id, meal);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Istanieje danie o podanej nazwie w bazie danych";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -236,7 +277,7 @@ namespace Restauracja_MVC.Controllers
 
             command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
             command.Parameters["@Name"].Value = meal.Name;
-            command.Parameters.Add("@Price", System.Data.SqlDbType.Float);
+            command.Parameters.Add("@Price", System.Data.SqlDbType.Money);
             command.Parameters["@Price"].Value = meal.Price;
             command.Parameters.Add("@Description", System.Data.SqlDbType.VarChar);
             command.Parameters["@Description"].Value = meal.Description;

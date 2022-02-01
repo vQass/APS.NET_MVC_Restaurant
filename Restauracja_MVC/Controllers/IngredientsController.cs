@@ -22,9 +22,16 @@ namespace Restauracja_MVC.Controllers
             connectionString = _config.GetConnectionString("DbConnection");
         }
 
+
+
         // GET: IngredientsController
         public ActionResult Index()
         {
+            if (TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"].ToString();
+                TempData["Error"] = null;
+            }
             return View(GetIngredientsList());
         }
 
@@ -91,7 +98,14 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    AddIngredient(ingredient);
+                    if(CheckUniqueIngredient(ingredient.Name))
+                    {
+                        AddIngredient(ingredient);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Podana nazwa występuje w bazie danych";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -101,6 +115,26 @@ namespace Restauracja_MVC.Controllers
             }
             return View();
         }
+
+        [NonAction]
+        private bool CheckUniqueIngredient(string name)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string qs = "SELECT Name FROM Ingredients WHERE Name = @Name";
+                using var command = new SqlCommand(qs, connection);
+
+                command.Parameters.Add("@Name", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Name"].Value = name;
+
+                command.Connection.Open();
+
+                using SqlDataReader dr = command.ExecuteReader();
+                return !dr.HasRows;
+            }
+            return false;
+        }
+
 
         [NonAction]
         private void AddIngredient(Ingredient ingredient)
@@ -135,7 +169,14 @@ namespace Restauracja_MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    UpdateIngredient(id, ingredient);
+                    if(CheckUniqueIngredient(ingredient.Name))
+                    {
+                        UpdateIngredient(id, ingredient);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Podana nazwa występuje w bazie danych";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }

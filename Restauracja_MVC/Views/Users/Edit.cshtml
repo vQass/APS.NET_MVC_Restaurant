@@ -26,29 +26,41 @@
                 <input asp-for="Surname" class="form-control" />
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
-            @if(Model.ID != (long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value)))
+
+            @if (Model != null && Model.ID != (long.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value)))
             {
                 <div class="form-group">
                     <label asp-for="Role" class="control-label"></label>
-                    <select asp-for="Role" asp-items="Model.Roles" class="form-control" > </select>
+                    <select asp-for="Role" asp-items="Model.Roles" class="form-control"> </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
+            }else { 
+                <input asp-for="Role" type="hidden" value="1" />
             }
+
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <select asp-for="City" asp-items="Model.Cities" class="form-control"></select>
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
+
+            @if(Model != null)
+            {
+                <div class="form-group">
+                    <label asp-for="City" class="control-label"></label>
+                    <select asp-for="City" asp-items="Model.Cities" class="form-control"></select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="ID" />
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>
